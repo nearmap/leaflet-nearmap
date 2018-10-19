@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html style="width: 100%; height: 100%;">
 
 <head>
 
@@ -16,21 +16,29 @@
     crossorigin=""></script>
 </head>
 
-<body>
+<body style="width: 100%; height: 100%;">
 
-  <div id="mapid" style="width: 800px; height: 800px;"></div>
+  <div id="mapid" style="width: 100%; height: 100%;"></div>
+  <script src="./nearmap-projection.js" type="text/JavaScript"></script>
   <script>
 
     var nearMapConfig = {
-      url: 'https://api.nearmap.com/tiles/v3/West/{z}/{x}/{y}.img?apikey=MmNhMGY3ZGMtNjIyYy00ZGI0LWJmODktMDkyOTBjOTA2Nzcz',
+      url: 'https://api.nearmap.com/tiles/v3/Vert/{z}/{x}/{y}.img?apikey=MmNhMGY3ZGMtNjIyYy00ZGI0LWJmODktMDkyOTBjOTA2Nzcz',
       lat: -33.862704,
       lng: 151.208508,
+      //lat: 57,
+      //lng: 35,
+
       zoom: 15,
       maxZoom: 24,
       tileSizeX: 256,
       tileSizeY: 256,
     };
-    var nearMapView = L.map('mapid').setView([nearMapConfig.lat, nearMapConfig.lng], nearMapConfig.zoom);
+    var mapOpts = {
+      //crs: L.CRS.Simple,
+      crs: NearmapCRS("HEADING_NORTH"),
+    }
+    var nearMapView = L.map('mapid', mapOpts).setView([nearMapConfig.lat, nearMapConfig.lng], nearMapConfig.zoom);
 
     L.tileLayer(nearMapConfig.url, {
       maxZoom: nearMapConfig.maxZoom,
