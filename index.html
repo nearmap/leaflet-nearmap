@@ -12,30 +12,92 @@
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
     crossorigin="" />
-  <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
-    crossorigin=""></script>
+  <!-- <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+    crossorigin=""></script> -->
+  <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet-src.js"> </script>
+  <script type='text/javascript' src="http://kartena.github.io/Proj4Leaflet/lib/proj4-compressed.js"></script>
+  <script type='text/javascript' src="http://kartena.github.io/Proj4Leaflet/src/proj4leaflet.js"></script>
+  <script type='text/javascript' src='./nearmapTransforms.js'></script>
+
 </head>
 
 <body>
-
-  <div id="mapid" style="width: 800px; height: 800px;"></div>
+  <div id="mapid" style="width: 100%; height: 1000px;"></div>
   <script>
 
     var nearMapConfig = {
-      url: 'https://api.nearmap.com/tiles/v3/West/{z}/{x}/{y}.img?apikey=MmNhMGY3ZGMtNjIyYy00ZGI0LWJmODktMDkyOTBjOTA2Nzcz',
-      lat: -33.862704,
-      lng: 151.208508,
-      zoom: 15,
-      maxZoom: 24,
-      tileSizeX: 256,
-      tileSizeY: 256,
-    };
-    var nearMapView = L.map('mapid').setView([nearMapConfig.lat, nearMapConfig.lng], nearMapConfig.zoom);
+        url: ({ contentType, z, x, y }) => `https://api.nearmap.com/tiles/v3/${contentType}/${z}/${x}/${y}.img?tertiary=default&apikey=MmNhMGY3ZGMtNjIyYy00ZGI0LWJmODktMDkyOTBjOTA2Nzcz`,
+        lat: -33.862704,
+        lng: 151.208508,
+        zoom: 16,
+        maxZoom: 24,
+        tileSizeX: 265,
+        tileSizeY: 265,
+      };
+      var center = 
+      // [nearMapConfig.lat, nearMapConfig.lng]; // Vert, North, South
+      // [33.862997, -151.206878]; // East
+      [33.857388, -151.209245]; // West
 
-    L.tileLayer(nearMapConfig.url, {
-      maxZoom: nearMapConfig.maxZoom,
-      tileSize: L.point(nearMapConfig.tileSizeX, nearMapConfig.tileSizeY),
-    }).addTo(nearMapView);
+      var nearMapView = L.map('mapid', {
+        crs,
+        minZoom: 1,
+        maxZoom: 24,
+        noWrap: true,
+        continuousWorld: true
+      }).setView(center, nearMapConfig.zoom);
+
+      var extLayer = L.TileLayer.extend({
+        getTileUrl: function (coords) {
+          var x, y, numTiles = 1 << coords.z; // 2^zoom
+          var contentType = 'West';
+
+          switch (contentType) {
+            case 'East':
+              x = numTiles - (coords.y + 1);
+              y = coords.x;
+              break;
+            case 'South':
+              x = numTiles - (coords.x + 1);
+              y = numTiles - (coords.y + 1);
+              break;
+            case 'West':
+              x = coords.y;
+              y = numTiles - (coords.x + 1);
+              break;
+            case 'Vert':
+            case 'North':
+            default:
+              x = coords.x;
+              y = coords.y;
+          }
+
+          return nearMapConfig.url({
+            contentType, 
+            x,
+            y,
+            z: coords.z,
+          });
+        },
+      })
+
+      var nearMapLayer = new extLayer({
+        tileSize: L.point(nearMapConfig.tileSizeX, nearMapConfig.tileSizeY),
+      });
+
+      nearMapLayer.addTo(nearMapView);
+
+
+      var popup = L.popup();
+
+      function onMapClick(e) {
+        popup
+          .setLatLng(e.latlng)
+          .setContent("You clicked the map at " + e.latlng.toString())
+          .openOn(nearMapView);
+      }
+
+      nearMapView.on('click', onMapClick);
 
   </script>
 
