@@ -1,7 +1,7 @@
 import CRS from './crs';
 import leaflet from 'leaflet';
 
-describe('crs()', ()=> {
+describe('CRS', ()=> {
   const heading = 'HEADING_SOUTH';
   const crs = new CRS(heading);
 
@@ -9,28 +9,8 @@ describe('crs()', ()=> {
     expect(crs.heading).toEqual(heading);
   });
 
-  it('Rotate LatLng', ()=> {
-    const rotatedLatlng = crs.rotateLatLng(1, 2);
-    expect(rotatedLatlng).toEqual(leaflet.latLng(-1, -2));
-  });
-
-  it('Rotate point', ()=> {
-    const point = leaflet.point((1, 2));
-    const rotatedPoint = crs.rotatePoint(point);
-    
-    expect(rotatedPoint).toEqual(point);
-  });
-
-  it('Generate URL', ()=> {
-    const url = 'https://youDomain.com/{contentType}/{z}/{x}/{y}?default=xxx';
-    const expectedUrl = 'https://youDomain.com/South/0/0/0?default=xxx';
-    const resultedUrl = crs.getTileUrl({heading, url})({x: 0, y: 0, z: 0});
-    
-    expect(resultedUrl).toEqual(expectedUrl);
-  });
-
   it('project from LatLng To Point', ()=> {
-    const latLng = leaflet.latLng(0, 0);
+    const latLng = leaflet.latLng(1, 1);
     const rotatedPoint = crs.project(latLng);
     
     expect(rotatedPoint).toHaveProperty('x');
@@ -51,6 +31,112 @@ describe('crs()', ()=> {
     expect(GeneratedCRS).toHaveProperty('projection.project');
     expect(GeneratedCRS).toHaveProperty('projection.unproject');
     expect(GeneratedCRS).toHaveProperty('wrapLng', undefined);
+  });
+
+});
+
+
+describe('Rotate latlng', ()=> {
+  it('Rotate North latlng ', ()=> {
+    const heading = 'HEADING_NORTH';
+    const crs = new CRS(heading);
+    const rotatedLatLng = crs.rotateLatLng(33.123134, 151.123134);
+    expect(rotatedLatLng).toEqual(leaflet.latLng(33.123134, 151.123134));
+  });
+
+  it('Rotate South latlng', ()=> {
+    const heading = 'HEADING_SOUTH';
+    const crs = new CRS(heading);
+    const rotatedLatLng = crs.rotateLatLng(33.123134, 151.123134);
+    expect(rotatedLatLng).toEqual(leaflet.latLng(-33.123134, -151.123134));
+  });
+
+  it('Rotate East latlng', ()=> {
+    const heading = 'HEADING_EAST';
+    const crs = new CRS(heading);
+    const rotatedLatLng = crs.rotateLatLng(33.123134, 151.123134);
+    expect(rotatedLatLng).toEqual(leaflet.latLng(33.123134, -151.123134));
+  });
+
+  it('Rotate West latlng', ()=> {
+    const heading = 'HEADING_WEST';
+    const crs = new CRS(heading);
+    const rotatedLatLng = crs.rotateLatLng(33.123134, 151.123134);
+    expect(rotatedLatLng).toEqual(leaflet.latLng(-33.123134, 151.123134));
+  });
+});
+
+
+describe('Rotate point', ()=> {
+  it('Rotate North point ', ()=> {
+    const heading = 'HEADING_NORTH';
+    const crs = new CRS(heading);
+    const point = leaflet.point(1, 2);
+    const rotatedPoint = crs.rotatePoint(point);
+
+    expect(rotatedPoint).toEqual(point);
+  });
+
+  it('Rotate South point', ()=> {
+    const heading = 'HEADING_SOUTH';
+    const crs = new CRS(heading);
+    const point = leaflet.point(1, 2);
+    const rotatedPoint = crs.rotatePoint(point);
+
+    expect(rotatedPoint).toEqual(point);
+  });
+
+  it('Rotate East point', ()=> {
+    const heading = 'HEADING_EAST';
+    const crs = new CRS(heading);
+    const point = leaflet.point(1, 2);
+    const rotatedPoint = crs.rotatePoint(point);
+
+    expect(rotatedPoint).toEqual(leaflet.point(2, 1));
+  });
+
+  it('Rotate West point', ()=> {
+    const heading = 'HEADING_WEST';
+    const crs = new CRS(heading);
+    const point = leaflet.point(1, 2);
+    const rotatedPoint = crs.rotatePoint(point);
+
+    expect(rotatedPoint).toEqual(leaflet.point(2, 1));
+  });
+});
+
+describe('Generate URL', ()=> {
+  it('North', ()=> {
+    const heading = 'HEADING_NORTH';
+    const crs = new CRS(heading);
+    const url = 'https://youDomain.com/{contentType}/{z}/{x}/{y}?default=xxx';
+    const expectedUrl = 'https://youDomain.com/North/0/0/0?default=xxx';
+    const resultedUrl = crs.getTileUrl({heading, url})({x: 0, y: 0, z: 0});
+    expect(resultedUrl).toEqual(expectedUrl);
+  });
+  it('South', ()=> {
+    const heading = 'HEADING_SOUTH';
+    const crs = new CRS(heading);
+    const url = 'https://youDomain.com/{contentType}/{z}/{x}/{y}?default=xxx';
+    const expectedUrl = 'https://youDomain.com/South/1/0/0?default=xxx';
+    const resultedUrl = crs.getTileUrl({heading, url})({x: 1, y: 1, z: 1});
+    expect(resultedUrl).toEqual(expectedUrl);
+  });
+  it('East', ()=> {
+    const heading = 'HEADING_EAST';
+    const crs = new CRS(heading);
+    const url = 'https://youDomain.com/{contentType}/{z}/{x}/{y}?default=xxx';
+    const expectedUrl = 'https://youDomain.com/East/2/1/2?default=xxx';
+    const resultedUrl = crs.getTileUrl({heading, url})({x: 2, y: 2, z: 2});
+    expect(resultedUrl).toEqual(expectedUrl);
+  });
+  it('West', ()=> {
+    const heading = 'HEADING_WEST';
+    const crs = new CRS(heading);
+    const url = 'https://youDomain.com/{contentType}/{z}/{x}/{y}?default=xxx';
+    const expectedUrl = 'https://youDomain.com/West/3/3/4?default=xxx';
+    const resultedUrl = crs.getTileUrl({heading, url})({x: 3, y: 3, z: 3});
+    expect(resultedUrl).toEqual(expectedUrl);
   });
 
 });
