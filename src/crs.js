@@ -5,7 +5,8 @@ const CRS = leaflet.Class.extend({
    * Leaflet constructor
    */
   initialize: function(heading) {
-    this.heading = heading;
+    // HEADING_VERT behaves as same as HEADING_NORTH
+    this.heading = heading === 'HEADING_VERT' ? 'HEADING_NORTH' : heading;
   },
 
   /**
@@ -14,7 +15,7 @@ const CRS = leaflet.Class.extend({
     *
     * @returns a LatLng() object.
   **/
-  rotateLatLng: function(lat, lng) {
+  rotateLatLng: function({lat, lng}) {
     switch (this.heading) {
       case 'HEADING_NORTH':
         break;
@@ -43,6 +44,19 @@ const CRS = leaflet.Class.extend({
       return leaflet.point(point.x, point.y);
     }
     return leaflet.point(point.y, point.x);
+  },
+
+  /**
+  * Invert lat, lng to -lat, lng when heading east or west
+  * This helper method is used by the projection methods.
+  *
+  * @returns a new Point() object.
+  **/
+  invertedLatLng: function(lat, lng) {
+    if (this.heading === 'HEADING_NORTH' || this.heading === 'HEADING_SOUTH') {
+      return {lat, lng};
+    }
+    return {lat: -lat, lng: -lng};
   },
 
   /**
@@ -106,7 +120,8 @@ const CRS = leaflet.Class.extend({
   * heading.
   **/
   project: function(latlng) {
-    const rotatedLatLng = this.rotateLatLng(latlng.lat, latlng.lng);
+    const invertedLatLng = this.invertedLatLng(latlng.lat, latlng.lng);
+    const rotatedLatLng = this.rotateLatLng(invertedLatLng);
     const point = leaflet.Projection.SphericalMercator.project(rotatedLatLng);
     return this.rotatePoint(point);
   },
@@ -121,7 +136,7 @@ const CRS = leaflet.Class.extend({
   unproject: function(point) {
     const rotatedPoint = this.rotatePoint(point);
     const latLng = leaflet.Projection.SphericalMercator.unproject(rotatedPoint);
-    return this.rotateLatLng(latLng.lat, latLng.lng);
+    return this.rotateLatLng(this.invertedLatLng(latLng.lat, latLng.lng));
   },
 
   /**

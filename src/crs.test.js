@@ -35,33 +35,32 @@ describe('CRS', ()=> {
 
 });
 
-
 describe('Rotate latlng', ()=> {
   it('Rotate North latlng ', ()=> {
     const heading = 'HEADING_NORTH';
     const crs = new CRS(heading);
-    const rotatedLatLng = crs.rotateLatLng(33.123134, 151.123134);
+    const rotatedLatLng = crs.rotateLatLng({lat: 33.123134, lng: 151.123134});
     expect(rotatedLatLng).toEqual(leaflet.latLng(33.123134, 151.123134));
   });
 
   it('Rotate South latlng', ()=> {
     const heading = 'HEADING_SOUTH';
     const crs = new CRS(heading);
-    const rotatedLatLng = crs.rotateLatLng(33.123134, 151.123134);
+    const rotatedLatLng = crs.rotateLatLng({lat: 33.123134, lng: 151.123134});
     expect(rotatedLatLng).toEqual(leaflet.latLng(-33.123134, -151.123134));
   });
 
   it('Rotate East latlng', ()=> {
     const heading = 'HEADING_EAST';
     const crs = new CRS(heading);
-    const rotatedLatLng = crs.rotateLatLng(33.123134, 151.123134);
+    const rotatedLatLng = crs.rotateLatLng({lat: 33.123134, lng: 151.123134});
     expect(rotatedLatLng).toEqual(leaflet.latLng(33.123134, -151.123134));
   });
 
   it('Rotate West latlng', ()=> {
     const heading = 'HEADING_WEST';
     const crs = new CRS(heading);
-    const rotatedLatLng = crs.rotateLatLng(33.123134, 151.123134);
+    const rotatedLatLng = crs.rotateLatLng({lat: 33.123134, lng: 151.123134});
     expect(rotatedLatLng).toEqual(leaflet.latLng(-33.123134, 151.123134));
   });
 });
@@ -139,4 +138,42 @@ describe('Generate URL', ()=> {
     expect(resultedUrl).toEqual(expectedUrl);
   });
 
+});
+
+describe('Invert latlng', ()=> {
+  it('Invert North latlng ', ()=> {
+    const heading = 'HEADING_NORTH';
+    const crs = new CRS(heading);
+    const rotatedLatLng = crs.invertedLatLng(33.123134, 151.123134);
+    expect(rotatedLatLng).toEqual(
+      leaflet.latLng({lat: 33.123134, lng: 151.123134})
+    );
+  });
+
+  it('Invert South latlng', ()=> {
+    const heading = 'HEADING_SOUTH';
+    const crs = new CRS(heading);
+    const rotatedLatLng = crs.invertedLatLng(33.123134, 151.123134);
+    expect(rotatedLatLng).toEqual(
+      leaflet.latLng({lat: 33.123134, lng: 151.123134})
+    );
+  });
+
+  it('Invert East latlng', ()=> {
+    const heading = 'HEADING_EAST';
+    const crs = new CRS(heading);
+    const rotatedLatLng = crs.invertedLatLng(33.123134, 151.123134);
+    expect(rotatedLatLng).toEqual(
+      leaflet.latLng({lat: -33.123134, lng: -151.123134})
+    );
+  });
+
+  it('Invert West latlng', ()=> {
+    const heading = 'HEADING_WEST';
+    const crs = new CRS(heading);
+    const rotatedLatLng = crs.invertedLatLng(33.123134, 151.123134);
+    expect(rotatedLatLng).toEqual(
+      leaflet.latLng({lat: -33.123134, lng: -151.123134})
+    );
+  });
 });

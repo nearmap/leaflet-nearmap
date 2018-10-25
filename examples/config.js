@@ -6,10 +6,9 @@ const tileWidth = 256;
 const tileHeight = 256;
 const lat = -33.862704;
 const lng = 151.208508;
-const heading = 'HEADING_NORTH';
+const heading = 'HEADING_VERT';
 const center = [lat, lng];
 const tileSize = leaflet.point(tileWidth, tileHeight);
-
 
 export {
   url,

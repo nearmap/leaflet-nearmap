@@ -46,19 +46,6 @@ import {
 } from './YOUR_CONFIG';
 
 /**
-* Rotate the lat, lng depending on the projection's heading
-* In order to using one coords for four directions
-*
-* @returns [lat, lng]
-**/
-function rotateCenter({center, heading}) {
-  if (heading === 'HEADING_NORTH' || heading === 'HEADING_SOUTH') {
-    return center;
-  }
-  return center.map((coord)=> -coord);
-}
-
-/**
  * Generate Nearmap customised CRS
  */
 const crs = new CRS(heading);
@@ -71,7 +58,7 @@ const nearMap = leaflet.map('mapid', {
 });
 
 const view = nearMap.setView(
-  rotateCenter({center, heading}),
+  center,
   zoom
 );
 
@@ -109,13 +96,13 @@ function switchView(heading) {
   const newCRS = new CRS(switchedHeading);
 
   // Remove existing TileLayer
-  nearMap.removeLayer(TileLayer);
+  nearMap.eachLayer((existedLayer)=> nearMap.removeLayer(existedLayer));
 
   // Inject into Map Oject
   nearMap.options.crs = newCRS.crs();
   
   nearMap.setView(
-    rotateCenter({center, heading: switchedHeading}),
+    center,
     zoom
   );
 

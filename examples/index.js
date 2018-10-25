@@ -1,7 +1,7 @@
 /* global document */
 import leaflet from 'leaflet';
 import CRS from '../src';
-import {rotateCenter, leafletPopup} from './utils';
+import {leafletPopup} from './utils';
 import {
   url,
   zoom,
@@ -22,15 +22,16 @@ const nearMap = leaflet.map('mapid', {
   crs: crs.crs()
 });
 
+/**
+ * Generate view with center and zoomLevel
+ */
 const view = nearMap.setView(
-  rotateCenter({center, heading}),
+  center,
   zoom
 );
 
 /**
 * Extend TileLayer with customised fetching tile URL
-*
-* @returns TileLayer
 **/
 const TileLayer = leaflet.TileLayer.extend({
   getTileUrl: crs.getTileUrl({url, heading})
@@ -61,13 +62,13 @@ function onClickHandler(event) {
   const newCRS = new CRS(switchedHeading);
 
   // Remove existing TileLayer
-  nearMap.removeLayer(TileLayer);
+  nearMap.eachLayer((existedLayer)=> nearMap.removeLayer(existedLayer));
 
   // Inject into Map Oject
   nearMap.options.crs = newCRS.crs();
   
   nearMap.setView(
-    rotateCenter({center, heading: switchedHeading}),
+    center,
     zoom
   );
 
@@ -90,6 +91,6 @@ function onClickHandler(event) {
 /**
  * Binding "onClickHandler" on four buttons
  */
-['btn_north', 'btn_south', 'btn_east', 'btn_west'].forEach((id)=> {
+['btn_vert', 'btn_north', 'btn_south', 'btn_east', 'btn_west'].forEach((id)=> {
   document.getElementById(id).addEventListener('click', onClickHandler);
 });
