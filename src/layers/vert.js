@@ -1,11 +1,13 @@
 import leaflet from 'leaflet';
 
+const tileWidth = 256;
+const tileHeight = 256;
 /**
   * Wraping TileLayer with custom getTileUrl of vertical heading
   *
   **/
 export default function vert(url) {
-  return leaflet.TileLayer.extend({
+  const LayerClass = leaflet.TileLayer.extend({
     getTileUrl: function(coords) {
       return (
         url
@@ -16,4 +18,8 @@ export default function vert(url) {
       );
     }
   });
+
+  return (new LayerClass({
+    tileSize: leaflet.point(tileWidth, tileHeight)
+  }));
 }

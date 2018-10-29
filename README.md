@@ -1,4 +1,4 @@
-# leaflet-nearmap-layer
+# leaflet-nearmap
 Use leaflet js library with Nearmap serivces
 
 ## Installation
@@ -53,8 +53,7 @@ function render(map, configure) {
     url,
     zoom,
     heading,
-    center,
-    tileSize
+    center
   } = configure;
 
   // Remove existing TileLayer
@@ -69,14 +68,10 @@ function render(map, configure) {
   );
 
   // Generate layer with heading
-  const NewLayerClass = getLayerByHeading(heading, url);
-
-  const newLayer = new NewLayerClass({
-    tileSize: tileSize
-  });
+  const layer = getLayerByHeading(heading, url);
 
   // Add new layer to map
-  map.addLayer(newLayer);
+  map.addLayer(layer);
 
   leafletPopup(view);
 }
@@ -84,27 +79,23 @@ function render(map, configure) {
 /**
  * Generate Leaflet Map container
  */
-const nearMap = leaflet.map('mapid');
+const map = leaflet.map('mapid');
 
-render(nearMap, config);
+render(map, config);
 
 ```
 Import nearmap custom CRS. e.g
 ```js
 import northCRS from 'leaflet-nearmap/crs/north';
 
-const nearMap = leaflet.map('mapid',{
+const map = leaflet.map('mapid',{
   crs: northCRS
 });
 
 ```
 Import nearmap custom Layer, which overwrites `getTileUrl` for nearmap panorama views, e.g
 ```js
-import NorthLayer from 'leaflet-nearmap/layers/north';
-const NewLayerClass = northLayer;
-
-const layer = new NorthLayer();
-
+import layer from 'leaflet-nearmap/layers/north';
 map.addLayer(layer);
 
 ```
@@ -118,7 +109,7 @@ Adding event listeners on switching among panorama views buttons
  */
 ['btn_vert', 'btn_north', 'btn_south', 'btn_east', 'btn_west'].forEach((id)=> {
   document.getElementById(id).addEventListener('click',
-    (event)=> render(nearMap, {
+    (event)=> render(map, {
       ...config,
       heading: event.target.getAttribute('data-heading')
     })
@@ -128,15 +119,6 @@ Adding event listeners on switching among panorama views buttons
 
 Leaflet UI layer
 ```js
-const nearMap = leaflet.map('mapid', {
-  crs: crs.crs()
-});
-
-const view = nearMap.setView(
-  rotateCenter({center, heading}),
-  zoom
-);
-
 view.on('click', (coords)=> {
   leaflet.popup()
     .setLatLng(coords.latlng)

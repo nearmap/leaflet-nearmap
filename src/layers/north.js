@@ -1,11 +1,13 @@
 import leaflet from 'leaflet';
 
+const tileWidth = 256;
+const tileHeight = 192;
 /**
   * Wraping TileLayer with custom getTileUrl of north heading
   *
   **/
 export default function north(url) {
-  return leaflet.TileLayer.extend({
+  const LayerClass = leaflet.TileLayer.extend({
     getTileUrl: function(coords) {
       return (
         url
@@ -16,4 +18,8 @@ export default function north(url) {
       );
     }
   });
+
+  return (new LayerClass({
+    tileSize: leaflet.point(tileWidth, tileHeight)
+  }));
 }

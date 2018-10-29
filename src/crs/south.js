@@ -30,6 +30,5 @@ const projection = leaflet.extend({}, leaflet.Projection.SphericalMercator, {
 
 export default leaflet.extend({}, leaflet.CRS.EPSG3857, {
   code: 'nm:south',
-  projection,
-  wrapLng: undefined
+  projection
 });

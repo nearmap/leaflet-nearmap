@@ -1,11 +1,13 @@
 import leaflet from 'leaflet';
 
+const tileWidth = 256;
+const tileHeight = 192;
 /**
   * Wraping TileLayer with custom getTileUrl of south heading
   *
   **/
 export default function south(url) {
-  return leaflet.TileLayer.extend({
+  const LayerClass = leaflet.TileLayer.extend({
     getTileUrl: function(coords) {
       const numTiles = 1 << coords.z; // 2^zoom
       const x = numTiles - (coords.x + 1);
@@ -19,4 +21,8 @@ export default function south(url) {
       );
     }
   });
+
+  return (new LayerClass({
+    tileSize: leaflet.point(tileWidth, tileHeight)
+  }));
 }

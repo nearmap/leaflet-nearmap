@@ -1,5 +1,4 @@
 import leaflet from 'leaflet';
-// import {getProjection} from './projection';
 
 const projection = leaflet.extend({}, leaflet.Projection.SphericalMercator, {
   /**
@@ -26,14 +25,9 @@ const projection = leaflet.extend({}, leaflet.Projection.SphericalMercator, {
   }
 });
 
-// export const nearmapNorthCRS = leaflet.extend({}, leaflet.CRS.EPSG3857, {
-//   projection,
-//   wrapLng: undefined
-// });
-
 export default leaflet.extend({}, leaflet.CRS.EPSG3857, {
-  projection,
-  wrapLng: undefined
+  code: 'nm:north',
+  projection
 });
 
 
