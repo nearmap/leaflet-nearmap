@@ -1,49 +1,9 @@
 /* global document */
 import leaflet from 'leaflet';
-import CRS from '../src';
+import {getCRSByHeading} from '../src/helper/getCRSByHeading';
+import {getLayerByHeading} from '../src/helper/getLayerByHeading';
 import {leafletPopup} from './utils';
-import {
-  url,
-  zoom,
-  heading,
-  center,
-  tileSize
-} from './config';
-
-/**
- * Generate Nearmap customised CRS
- */
-const crs = new CRS(heading);
-
-/**
- * Generate Leaflet Map container
- */
-const nearMap = leaflet.map('mapid', {
-  crs: crs.crs()
-});
-
-/**
- * Generate view with center and zoomLevel
- */
-const view = nearMap.setView(
-  center,
-  zoom
-);
-
-/**
-* Extend TileLayer with customised fetching tile URL
-**/
-const TileLayer = leaflet.TileLayer.extend({
-  getTileUrl: crs.getTileUrl({url, heading})
-});
-
-const layer = new TileLayer({
-  tileSize: tileSize
-});
-
-layer.addTo(view);
-
-leafletPopup(view);
+import * as config from './config';
 
 /**
  *  Panaroma view button onclick listeners
@@ -54,43 +14,54 @@ leafletPopup(view);
  *  4. Generate layer with new heading
  *  5. Add new layer
  */
-function onClickHandler(event) {
-  // Get heading from button attribute
-  const switchedHeading = event.target.getAttribute('data-heading');
-
-  // Generate CRS with new heading
-  const newCRS = new CRS(switchedHeading);
+function render(map, configure) {
+  const {
+    url,
+    zoom,
+    heading,
+    center,
+    tileSize
+  } = configure;
 
   // Remove existing TileLayer
-  nearMap.eachLayer((existedLayer)=> nearMap.removeLayer(existedLayer));
+  map.eachLayer((existedLayer)=> map.removeLayer(existedLayer));
 
-  // Inject into Map Oject
-  nearMap.options.crs = newCRS.crs();
-  
-  nearMap.setView(
+  // Inject crs into Map Oject
+  map.options.crs = getCRSByHeading(heading);
+
+  const view = map.setView(
     center,
     zoom
   );
 
-  // Not clear why need this. but work (https://github.com/Leaflet/Leaflet/issues/2553)
-  // nearMap._resetView(nearMap.getCenter(), nearMap.getZoom(), true);
-
   // Generate layer with heading
-  const NewLayerClass = leaflet.TileLayer.extend({
-    getTileUrl: newCRS.getTileUrl({url, heading: switchedHeading})
-  });
+  const LayerClass = getLayerByHeading(heading, url);
 
-  const newLayer = new NewLayerClass({
-    tileSize: tileSize
+  const layer = new LayerClass({
+    tileSize
   });
 
   // Add new layer to map
-  nearMap.addLayer(newLayer);
+  map.addLayer(layer);
+
+  leafletPopup(view);
 }
+
+/**
+ * Generate Leaflet Map container
+ */
+const nearMap = leaflet.map('mapid');
+
+render(nearMap, config);
 
 /**
  * Binding "onClickHandler" on four buttons
  */
 ['btn_vert', 'btn_north', 'btn_south', 'btn_east', 'btn_west'].forEach((id)=> {
-  document.getElementById(id).addEventListener('click', onClickHandler);
+  document.getElementById(id).addEventListener('click',
+    (event)=> render(nearMap, {
+      ...config,
+      heading: event.target.getAttribute('data-heading')
+    })
+  );
 });

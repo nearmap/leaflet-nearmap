@@ -34,90 +34,96 @@ More importantly, setup Leaflet Map container `<div id="mapid"></div>` for `L.ma
 
 [./examples/index.js](./examples/index.js):
 ```js
-/* global document */
 import leaflet from 'leaflet';
-import CRS from 'leaflet-nearmap';
-import { 
-  url, // 'https://yourdomain.com/tiles/{contentType}/{z}/{x}/{y}.img'
-  zoom, // zoomLevel
-  tileSize, // new Point()
-  center, // [lat, lng]
-  Heading, // String: 'North', 'South', 'EAST', 'WEST'
-} from './YOUR_CONFIG';
+import {getCRSByHeading} from '../src/helper/getCRSByHeading';
+import {getLayerByHeading} from '../src/helper/getLayerByHeading';
+import {leafletPopup} from './utils';
+import * as config from './config';
 
 /**
- * Generate Nearmap customised CRS
- */
-const crs = new CRS(heading);
-
-/**
- * Generate Leaflet Map container
- */
-const nearMap = leaflet.map('mapid', {
-  crs: crs.crs()
-});
-
-const view = nearMap.setView(
-  center,
-  zoom
-);
-
-/**
-* Extend TileLayer with customised fetching tile URL
-*
-* @returns TileLayer
-**/
-const TileLayer = leaflet.TileLayer.extend({
-  getTileUrl: crs.getTileUrl({url, heading})
-});
-
-const layer = new TileLayer({
-  tileSize: tileSize
-});
-
-layer.addTo(view);
-
-```
-
-Switch among panorama views
-
-```js
-
-/**
- *  Switch panorama view
+ *  Rendering 
  *  1. Remove existing TileLayer
  *  2. Generate new CRS
  *  3. Inject into Map Oject
  *  4. Generate layer with new heading
  *  5. Add new layer
  */
-function switchView(heading) {
-  // Generate CRS with new heading
-  const newCRS = new CRS(switchedHeading);
+function render(map, configure) {
+  const {
+    url,
+    zoom,
+    heading,
+    center,
+    tileSize
+  } = configure;
 
   // Remove existing TileLayer
-  nearMap.eachLayer((existedLayer)=> nearMap.removeLayer(existedLayer));
+  map.eachLayer((existedLayer)=> map.removeLayer(existedLayer));
 
-  // Inject into Map Oject
-  nearMap.options.crs = newCRS.crs();
-  
-  nearMap.setView(
+  // Inject crs into Map Oject
+  map.options.crs = getCRSByHeading(heading);
+
+  const view = map.setView(
     center,
     zoom
   );
 
   // Generate layer with heading
-  const NewLayerClass = leaflet.TileLayer.extend({
-    getTileUrl: newCRS.getTileUrl({url, heading: switchedHeading})
-  });
+  const NewLayerClass = getLayerByHeading(heading, url);
 
   const newLayer = new NewLayerClass({
     tileSize: tileSize
   });
 
   // Add new layer to map
-  nearMap.addLayer(newLayer);
+  map.addLayer(newLayer);
+
+  leafletPopup(view);
 }
+
+/**
+ * Generate Leaflet Map container
+ */
+const nearMap = leaflet.map('mapid');
+
+render(nearMap, config);
+
+```
+Import nearmap custom CRS. e.g
+```js
+import northCRS from 'leaflet-nearmap/crs/north';
+
+const nearMap = leaflet.map('mapid',{
+  crs: northCRS
+});
+
+```
+Import nearmap custom Layer, which overwrites `getTileUrl` for nearmap panorama views, e.g
+```js
+import NorthLayer from 'leaflet-nearmap/layers/north';
+const NewLayerClass = northLayer;
+
+const layer = new NorthLayer();
+
+map.addLayer(layer);
+
+```
+
+Adding event listeners on switching among panorama views buttons
+
+```js
+
+/**
+ * Binding "onClickHandler" on four buttons
+ */
+['btn_vert', 'btn_north', 'btn_south', 'btn_east', 'btn_west'].forEach((id)=> {
+  document.getElementById(id).addEventListener('click',
+    (event)=> render(nearMap, {
+      ...config,
+      heading: event.target.getAttribute('data-heading')
+    })
+  );
+});
 ```
 
 Leaflet UI layer

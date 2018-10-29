@@ -1,0 +1,5 @@
+export const HEADING_NORTH = 'HEADING_NORTH';
+export const HEADING_EAST = 'HEADING_EAST';
+export const HEADING_SOUTH = 'HEADING_SOUTH';
+export const HEADING_WEST = 'HEADING_WEST';
+export const HEADING_VERT = 'HEADING_VERT';
