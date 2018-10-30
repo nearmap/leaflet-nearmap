@@ -27,6 +27,11 @@ export default()=> ({
       template: './index.html'
     })
   ],
+  resolve: {
+    alias: {
+      'leaflet-nearmap': resolve(resolve(__dirname, '../'), 'src')
+    }
+  },
   module: {
     rules: [{
       test: /\.js$/,

@@ -1,25 +1,24 @@
 import leaflet from 'leaflet';
 
 const tileWidth = 256;
-const tileHeight = 192;
+const tileHeight = 256;
 /**
   * Wraping TileLayer with custom getTileUrl of north heading
   *
   **/
 export default function north(url) {
   const LayerClass = leaflet.TileLayer.extend({
-    getTileUrl: function(coords) {
-      return (
-        url
-          .replace('{contentType}', 'North')
-          .replace('{x}', coords.x)
-          .replace('{y}', coords.y)
-          .replace('{z}', coords.z)
-      );
+    getTileUrl: function({x, y, z}) {
+      return leaflet.Util.template(url, {
+        contentType: 'North',
+        x,
+        y,
+        z
+      });
     }
   });
 
-  return (new LayerClass({
+  return (new LayerClass('', {
     tileSize: leaflet.point(tileWidth, tileHeight)
   }));
 }

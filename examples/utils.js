@@ -1,6 +1,7 @@
 import leaflet from 'leaflet';
-import {getCRSByHeading} from '../src/helper/getCRSByHeading';
-import {getLayerByHeading} from '../src/helper/getLayerByHeading';
+import {getCRSByHeading} from 'leaflet-nearmap/helper/getCRSByHeading';
+import {getLayerByHeading} from 'leaflet-nearmap/helper/getLayerByHeading';
+
 /**
 *  setup a popup with coords where you clicked on
 **/
@@ -21,13 +22,11 @@ function leafletPopup(view) {
  *  4. Generate layer with new heading
  *  5. Add new layer
  */
-function render(map, configure) {
-  const {
-    url,
-    zoom,
-    heading,
-    center
-  } = configure;
+function render(map, {url, heading}) {
+
+  // Get current zoom level and coords for next view
+  const zoom = map.getZoom();
+  const {lat, lng} = map.getCenter();
 
   // Remove existing TileLayer
   map.eachLayer((existedLayer)=> map.removeLayer(existedLayer));
@@ -36,7 +35,7 @@ function render(map, configure) {
   map.options.crs = getCRSByHeading(heading);
 
   const view = map.setView(
-    center,
+    [lat, lng],
     zoom
   );
 

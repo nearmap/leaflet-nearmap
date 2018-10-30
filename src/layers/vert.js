@@ -8,18 +8,17 @@ const tileHeight = 256;
   **/
 export default function vert(url) {
   const LayerClass = leaflet.TileLayer.extend({
-    getTileUrl: function(coords) {
-      return (
-        url
-          .replace('{contentType}', 'Vert')
-          .replace('{x}', coords.x)
-          .replace('{y}', coords.y)
-          .replace('{z}', coords.z)
-      );
+    getTileUrl: function({x, y, z}) {
+      return leaflet.Util.template(url, {
+        contentType: 'Vert',
+        x,
+        y,
+        z
+      });
     }
   });
 
-  return (new LayerClass({
+  return (new LayerClass('', {
     tileSize: leaflet.point(tileWidth, tileHeight)
   }));
 }

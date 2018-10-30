@@ -1,6 +1,11 @@
 import leaflet from 'leaflet';
 
-const projection = leaflet.extend({}, leaflet.Projection.SphericalMercator, {
+
+const {SphericalMercator} = leaflet.Projection;
+const {EPSG3857} = leaflet.CRS;
+
+
+const projection = leaflet.extend({}, SphericalMercator, {
   /**
   * Translate a location given as a LatLng to a point in world coordinates.
   *
@@ -25,7 +30,8 @@ const projection = leaflet.extend({}, leaflet.Projection.SphericalMercator, {
   }
 });
 
-export default leaflet.extend({}, leaflet.CRS.EPSG3857, {
+
+export default leaflet.extend({}, EPSG3857, {
   code: 'nm:north',
   projection
 });
