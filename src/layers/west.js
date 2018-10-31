@@ -1,27 +1,22 @@
-import {TileLayer, Util, Point} from 'leaflet';
+import {TileLayer, Point} from 'leaflet';
 import {TILESIZE} from '../constants';
 
 const {west: {width, height}} = TILESIZE;
-/**
-  * Wraping TileLayer with custom getTileUrl of west heading
-  *
-  **/
-export default function west(url) {
-  const LayerClass = TileLayer.extend({
-    getTileUrl(coords) {
-      const numTiles = 1 << coords.z; // 2^zoom
-      const x = coords.y;
-      const y = numTiles - (coords.x + 1);
-      return Util.template(url, {
-        contentType: 'West',
-        x,
-        y,
-        z: coords.z
-      });
-    }
-  });
 
-  return (new LayerClass('', {
+
+export const West = TileLayer.extend({
+  getTileUrl({x, y, z}) {
+    const numTiles = 1 << z; // 2^zoom
+    [x, y] = [y, numTiles - (x + 1)];
+    // eslint-disable-next-line prefer-reflect
+    return TileLayer.prototype.getTileUrl.call(this, {x, y, z});
+  }
+});
+
+
+export default function west(url) {
+  return new West(url, {
+    layer: 'West',
     tileSize: new Point(width, height)
-  }));
+  });
 }
