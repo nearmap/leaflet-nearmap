@@ -39,9 +39,12 @@ See [./examples/index.js](./examples/index.js) for more details.
 
 ## Running the Examples
 
+Make sure you have a recent version of node installed.
+Clone or download this repo and run the following:
+
 ```bash
 npm ci
 npx run
 ```
 
-This starts a webserver and you can see the running app at http://localhost:8080
+This starts a webserver and you can explore the demo at http://localhost:8080/
