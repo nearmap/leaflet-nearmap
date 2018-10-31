@@ -1,22 +1,19 @@
-import {transformation, CRS, extend} from 'leaflet';
+import {transformation, extend, CRS} from 'leaflet';
 import {project, unproject} from './projection';
 import {TILESIZE} from '../constants';
 
-const {north: {width, height}, base} = TILESIZE;
+const {north: {width, height}} = TILESIZE;
 
-const projection = extend({}, CRS, {
+
+const projection = {
   project,
   unproject
-});
+};
+
 
 export default extend({}, CRS, {
   code: 'nm:north',
   projection,
-  transformation: transformation(
-    (width/base),
-    (width/base/2),
-    (height/base),
-    (height/base/2)
-  ),
+  transformation: transformation(1, 1/2, (height/width), (height/width)/2),
   infinite: true
 });

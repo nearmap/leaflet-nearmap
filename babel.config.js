@@ -38,7 +38,10 @@ module.exports = {
           modules: false,
           useBuiltIns: 'usage',
           targets: {
-            browsers: 'last 1 Chrome versions'
+            browsers: [
+              'last 2 versions',
+              'not IE < 11'
+            ]
           }
         }]
       ]

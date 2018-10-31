@@ -1,11 +1,17 @@
 /* eslint-env node */
+import {resolve, join} from 'path';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import {resolve, join} from 'path';
-const packageDir = resolve(__dirname, '../..');
 
-export default()=> ({
+
+const packageDir = resolve(__dirname, '..');
+
+
+export default ()=> ({
   mode: 'development',
+  entry: {
+    demoApp: './index.js'
+  },
   output: {
     path: join(packageDir, 'build'),
     filename: '[name].js'
@@ -18,9 +24,6 @@ export default()=> ({
       name: 'shared'
     }
   },
-  entry: {
-    demoApp: './index.js'
-  },
   plugins: [
     new MiniCssExtractPlugin(),
     new HtmlWebpackPlugin({
@@ -29,13 +32,13 @@ export default()=> ({
   ],
   resolve: {
     alias: {
-      'leaflet-nearmap': resolve(resolve(__dirname, '../'), 'src')
+      'leaflet-nearmap': join(packageDir, 'src')
     }
   },
   module: {
     rules: [{
       test: /\.js$/,
-      include: [__dirname],
+      include: [__dirname, join(packageDir, 'src')],
       loader: 'babel-loader',
       options: {envName: 'webpack'}
     }, {

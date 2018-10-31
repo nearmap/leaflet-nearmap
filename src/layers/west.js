@@ -8,7 +8,7 @@ const {west: {width, height}} = TILESIZE;
   **/
 export default function west(url) {
   const LayerClass = TileLayer.extend({
-    getTileUrl: function(coords) {
+    getTileUrl(coords) {
       const numTiles = 1 << coords.z; // 2^zoom
       const x = coords.y;
       const y = numTiles - (coords.x + 1);

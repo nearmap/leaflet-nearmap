@@ -9,7 +9,7 @@ const {east: {width, height}} = TILESIZE;
   **/
 export default function east(url) {
   const LayerClass = TileLayer.extend({
-    getTileUrl: function(coords) {
+    getTileUrl(coords) {
       const numTiles = 1 << coords.z; // 2^zoom
       const x = numTiles - (coords.y + 1);
       const y = coords.x;

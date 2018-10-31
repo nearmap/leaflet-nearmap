@@ -7,9 +7,7 @@ export const HEADING_VERT = 'HEADING_VERT';
 export const TILESIZE = {
   north: {width: 256, height: 192},
   south: {width: 256, height: 192},
-  east: {width: 192, height: 256},
-  west: {width: 192, height: 256},
-  vert: {width: 256, height: 256},
-  base: 256
+  east: {width: 256, height: 192},
+  west: {width: 256, height: 192},
+  vert: {width: 256, height: 256}
 };
-

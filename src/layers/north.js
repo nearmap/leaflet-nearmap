@@ -8,7 +8,7 @@ const {north: {width, height}} = TILESIZE;
   **/
 export default function north(url) {
   const LayerClass = TileLayer.extend({
-    getTileUrl: function({x, y, z}) {
+    getTileUrl({x, y, z}) {
       return Util.template(url, {
         contentType: 'North',
         x,

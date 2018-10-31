@@ -2,7 +2,3 @@ root: true
 
 extends:
   - '@nearmap/eslint-config-react'
-
-rules:
-  react/prop-types: off
-  object-shorthand: off

@@ -8,7 +8,7 @@ const {vert: {width, height}} = TILESIZE;
   **/
 export default function vert(url) {
   const LayerClass = TileLayer.extend({
-    getTileUrl: function({x, y, z}) {
+    getTileUrl({x, y, z}) {
       return Util.template(url, {
         contentType: 'Vert',
         x,
