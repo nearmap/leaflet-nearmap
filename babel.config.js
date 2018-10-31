@@ -2,7 +2,7 @@
 
 module.exports = {
   // Common to all envs below.
-  presets: ['@babel/preset-react'],
+  presets: [],
 
   env: {
     // Used as the default for running babel
