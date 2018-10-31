@@ -1,24 +1,15 @@
-import {TileLayer, Util, Point} from 'leaflet';
+import {TileLayer, Point} from 'leaflet';
 import {TILESIZE} from '../constants';
 
 const {north: {width, height}} = TILESIZE;
-/**
-  * Wraping TileLayer with custom getTileUrl of north heading
-  *
-  **/
-export default function north(url) {
-  const LayerClass = TileLayer.extend({
-    getTileUrl({x, y, z}) {
-      return Util.template(url, {
-        contentType: 'North',
-        x,
-        y,
-        z
-      });
-    }
-  });
 
-  return (new LayerClass('', {
+
+export const North = TileLayer;
+
+
+export default function north(url) {
+  return new North(url, {
+    layer: 'North',
     tileSize: new Point(width, height)
-  }));
+  });
 }

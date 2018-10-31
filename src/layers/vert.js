@@ -1,24 +1,15 @@
-import {TileLayer, Util, Point} from 'leaflet';
+import {TileLayer, Point} from 'leaflet';
 import {TILESIZE} from '../constants';
 
 const {vert: {width, height}} = TILESIZE;
-/**
-  * Wraping TileLayer with custom getTileUrl of vertical heading
-  *
-  **/
-export default function vert(url) {
-  const LayerClass = TileLayer.extend({
-    getTileUrl({x, y, z}) {
-      return Util.template(url, {
-        contentType: 'Vert',
-        x,
-        y,
-        z
-      });
-    }
-  });
 
-  return (new LayerClass('', {
+
+export const Vert = TileLayer;
+
+
+export default function vert(url) {
+  return new Vert(url, {
+    layer: 'Vert',
     tileSize: new Point(width, height)
-  }));
+  });
 }

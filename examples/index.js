@@ -5,13 +5,6 @@ import {getLayerByHeading} from 'leaflet-nearmap/helper/getLayerByHeading';
 
 
 /**
- * configuration
- */
-const demoKey ='Yzc2MjEzMWUtY2Q4YS00NTM2LTgyMDgtMDljZjI2YTdhMTMz';
-const urlTemplate = `https://api.nearmap.com/tiles/v3/{contentType}/{z}/{x}/{y}.img?tertiary=default&apikey=${demoKey}`;
-
-
-/**
 *  setup a popup with coords where you clicked on
 **/
 function initPopup(map) {
@@ -51,7 +44,7 @@ export function updateMap(map, url, heading) {
 }
 
 
-function initButtons(map) {
+function initButtons(map, url) {
   const buttons = [
     'btn_vert', 'btn_north', 'btn_south', 'btn_east', 'btn_west'
   ];
@@ -59,13 +52,17 @@ function initButtons(map) {
   for (const id of buttons) {
     document.getElementById(id).addEventListener('click', ({target})=> {
       const heading = target.getAttribute('data-heading');
-      updateMap(map, urlTemplate, heading);
+      updateMap(map, url, heading);
     });
   }
 }
 
 
 function init() {
+  // API config
+  const demoKey ='Yzc2MjEzMWUtY2Q4YS00NTM2LTgyMDgtMDljZjI2YTdhMTMz';
+  const url = `https://api.nearmap.com/tiles/v3/{layer}/{z}/{x}/{y}.img?tertiary=default&apikey=${demoKey}`;
+
   // demo area that is available for demo API-key
   const lat = -34.915302;
   const lng = 138.595637;
@@ -77,11 +74,11 @@ function init() {
     zoom
   });
 
-  updateMap(map, urlTemplate, heading);
+  updateMap(map, url, heading);
 
   initPopup(map);
 
-  initButtons(map);
+  initButtons(map, url);
 }
 
 init();

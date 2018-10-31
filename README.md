@@ -18,16 +18,19 @@ layer:
 
 ```js
 import leaflet from 'leaflet';
-import northCRS from 'leaflet-nearmap/crs/north';
+import northCrs from 'leaflet-nearmap/crs/north';
 import northLayer from 'leaflet-nearmap/layers/north';
 
+const ApiKey = 'YOUR_API_KEY';
+const UrlTemplate = `https://api.nearmap.com/tiles/v3/{layer}/{z}/{x}/{y}.img?tertiary=default&apikey=${ApiKey}`;
+
 const map = leaflet.map('mapid', {
-  crs: northCRS,
+  crs: northCrs,
   center: [-34.915302, 138.595637],
   zoom: 13
 });
 
-map.addLayer(northLayer);
+map.addLayer(northLayer(UrlTemplate));
 ```
 
 
