@@ -1,16 +1,17 @@
-import {transformation, CRS, extend} from 'leaflet';
+import leaflet from 'leaflet';
+import {transformation} from 'leaflet';
 import {project, unproject} from './projection';
 import {TILESIZE} from '../constants';
 
-const {north: {width, height}, base} = TILESIZE;
+const {vert: {width, height}, base} = TILESIZE;
 
-const projection = extend({}, CRS, {
+const projection = leaflet.extend({}, leaflet.CRS, {
   project,
   unproject
 });
 
-export default extend({}, CRS, {
-  code: 'nm:north',
+export default leaflet.extend({}, leaflet.CRS, {
+  code: 'nm:vert',
   projection,
   transformation: transformation(
     (width/base),

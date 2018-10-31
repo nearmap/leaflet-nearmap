@@ -2,6 +2,7 @@ import north from '../crs/north';
 import south from '../crs/south';
 import east from '../crs/east';
 import west from '../crs/west';
+import vert from '../crs/vert';
 import {
   HEADING_VERT,
   HEADING_NORTH,
@@ -24,6 +25,7 @@ export function getCRSByHeading(heading) {
     case HEADING_WEST:
       return west;
     case HEADING_VERT:
+      return vert;
     case HEADING_NORTH:
     default:
       return north;

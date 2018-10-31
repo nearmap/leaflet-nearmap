@@ -1,18 +1,18 @@
-import leaflet from 'leaflet';
+import {TileLayer, Util, Point} from 'leaflet';
+import {TILESIZE} from '../constants';
 
-const tileWidth = 256;
-const tileHeight = 256;
+const {west: {width, height}} = TILESIZE;
 /**
   * Wraping TileLayer with custom getTileUrl of west heading
   *
   **/
 export default function west(url) {
-  const LayerClass = leaflet.TileLayer.extend({
+  const LayerClass = TileLayer.extend({
     getTileUrl: function(coords) {
       const numTiles = 1 << coords.z; // 2^zoom
       const x = coords.y;
       const y = numTiles - (coords.x + 1);
-      return leaflet.Util.template(url, {
+      return Util.template(url, {
         contentType: 'West',
         x,
         y,
@@ -22,6 +22,6 @@ export default function west(url) {
   });
 
   return (new LayerClass('', {
-    tileSize: leaflet.point(tileWidth, tileHeight)
+    tileSize: new Point(width, height)
   }));
 }

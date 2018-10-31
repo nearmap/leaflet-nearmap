@@ -1,19 +1,19 @@
-import leaflet from 'leaflet';
+import {TileLayer, Util, Point} from 'leaflet';
+import {TILESIZE} from '../constants';
 
-const tileWidth = 256;
-const tileHeight = 256;
+const {east: {width, height}} = TILESIZE;
 
 /**
   * Wraping TileLayer with custom getTileUrl of east heading
   *
   **/
 export default function east(url) {
-  const LayerClass = leaflet.TileLayer.extend({
+  const LayerClass = TileLayer.extend({
     getTileUrl: function(coords) {
       const numTiles = 1 << coords.z; // 2^zoom
       const x = numTiles - (coords.y + 1);
       const y = coords.x;
-      return leaflet.Util.template(url, {
+      return Util.template(url, {
         contentType: 'East',
         x,
         y,
@@ -23,6 +23,6 @@ export default function east(url) {
   });
 
   return (new LayerClass('', {
-    tileSize: leaflet.point(tileWidth, tileHeight)
+    tileSize: new Point(width, height)
   }));
 }

@@ -1,15 +1,15 @@
-import leaflet from 'leaflet';
+import {TileLayer, Util, Point} from 'leaflet';
+import {TILESIZE} from '../constants';
 
-const tileWidth = 256;
-const tileHeight = 256;
+const {vert: {width, height}} = TILESIZE;
 /**
   * Wraping TileLayer with custom getTileUrl of vertical heading
   *
   **/
 export default function vert(url) {
-  const LayerClass = leaflet.TileLayer.extend({
+  const LayerClass = TileLayer.extend({
     getTileUrl: function({x, y, z}) {
-      return leaflet.Util.template(url, {
+      return Util.template(url, {
         contentType: 'Vert',
         x,
         y,
@@ -19,6 +19,6 @@ export default function vert(url) {
   });
 
   return (new LayerClass('', {
-    tileSize: leaflet.point(tileWidth, tileHeight)
+    tileSize: new Point(width, height)
   }));
 }
