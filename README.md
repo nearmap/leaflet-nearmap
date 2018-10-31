@@ -19,7 +19,7 @@ layer:
 ```js
 import leaflet from 'leaflet';
 import northCRS from 'leaflet-nearmap/crs/north';
-import layer from 'leaflet-nearmap/layers/north';
+import northLayer from 'leaflet-nearmap/layers/north';
 
 const map = leaflet.map('mapid', {
   crs: northCRS,
@@ -27,9 +27,7 @@ const map = leaflet.map('mapid', {
   zoom: 13
 });
 
-map.addLayer(layer);
-
-map.setView(center, zoom);
+map.addLayer(northLayer);
 ```
 
 
