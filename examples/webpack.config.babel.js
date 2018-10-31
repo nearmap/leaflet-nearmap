@@ -14,7 +14,7 @@ export default ()=> ({
   },
   output: {
     path: join(packageDir, 'build'),
-    filename: '[name].js'
+    filename: '[name]-[contenthash].js'
   },
   optimization: {
     minimize: false,
