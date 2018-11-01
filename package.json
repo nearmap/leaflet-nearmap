@@ -19,7 +19,7 @@
     "build": "run build:*",
     "build:babel": "babel src --out-dir build/pkg --ignore '**/*.test.js' --ignore '**/testing'",
     "build:files": "cp ./README.md ./LICENSE package.json build/pkg",
-    "test": "run lint jest",
+    "test": "run lint",
     "lint": "run lint:*",
     "lint:js": "eslint --report-unused-disable-directives --ignore-path .gitignore .",
     "lint:md": "remark --no-stdout --use remark-lint *.md",
