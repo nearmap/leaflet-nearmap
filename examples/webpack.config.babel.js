@@ -1,6 +1,5 @@
 /* eslint-env node */
 import {resolve, join} from 'path';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 
@@ -25,7 +24,6 @@ export default ()=> ({
     }
   },
   plugins: [
-    new MiniCssExtractPlugin(),
     new HtmlWebpackPlugin({
       template: './index.html'
     })
@@ -41,19 +39,6 @@ export default ()=> ({
       include: [__dirname, join(packageDir, 'src')],
       loader: 'babel-loader',
       options: {envName: 'webpack'}
-    }, {
-      test: /\.css$/,
-      include: [__dirname],
-      use: [
-        MiniCssExtractPlugin.loader,
-        {
-          loader: 'css-loader',
-          options: {
-            modules: true,
-            localIdentName: '[name]_[local]_[hash:base64:5]'
-          }
-        }
-      ]
     }]
   },
   devtool: '#cheap-module-source-map',
