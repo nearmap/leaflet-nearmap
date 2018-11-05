@@ -22,7 +22,7 @@ import northCrs from 'leaflet-nearmap/crs/north';
 import northLayer from 'leaflet-nearmap/layers/north';
 
 const ApiKey = 'YOUR_API_KEY';
-const UrlTemplate = `https://api.nearmap.com/tiles/v3/{layer}/{z}/{x}/{y}.img?tertiary=default&apikey=${ApiKey}`;
+const UrlTemplate = `https://api.nearmap.com/tiles/v3/{layer}/{z}/{x}/{y}.img?tertiary=satellite&apikey=${ApiKey}`;
 
 const map = leaflet.map('mapid', {
   crs: northCrs,
