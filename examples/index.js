@@ -61,7 +61,7 @@ function initButtons(map, url) {
 function init() {
   // API config
   const demoKey ='Yzc2MjEzMWUtY2Q4YS00NTM2LTgyMDgtMDljZjI2YTdhMTMz';
-  const url = `https://api.nearmap.com/tiles/v3/{layer}/{z}/{x}/{y}.img?tertiary=default&apikey=${demoKey}`;
+  const url = `https://api.nearmap.com/tiles/v3/{layer}/{z}/{x}/{y}.img?tertiary=satellite&apikey=${demoKey}`;
 
   // demo area that is available for demo API-key
   const lat = -34.915302;
