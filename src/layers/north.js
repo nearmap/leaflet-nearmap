@@ -10,6 +10,7 @@ export const North = TileLayer;
 export default function north(url) {
   return new North(url, {
     layer: 'North',
+    maxZoom: 24,
     tileSize: new Point(width, height)
   });
 }
