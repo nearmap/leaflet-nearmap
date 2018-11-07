@@ -17,6 +17,7 @@ export const East = TileLayer.extend({
 export default function east(url) {
   return new East(url, {
     layer: 'East',
+    maxZoom: 24,
     tileSize: new Point(width, height)
   });
 }
